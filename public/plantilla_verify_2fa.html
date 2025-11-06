@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Verificació 2FA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <form method="POST" action="/">
+                <header>
+                    <h2>Verifica el teu correu</h2>
+                </header>
+                
+                <article>
+                    <p>📧 Hem enviat un codi de verificació de 6 dígits al teu correu electrònic.</p>
+                    <p>Introdueix el codi per completar el registre i activar el teu compte:</p>
+                </article>
+                
+                <div class="verification-code">
+                    <label for="code">Codi de verificació</label>
+                    <input id="code" type="text" name="code" maxlength="6" pattern="[0-9]{6}" required 
+                           placeholder="123456" autocomplete="off" />
+                </div>
+                
+                <input type="submit" name="verify_2fa" value="Verificar i activar compte" />
+            </form>
+        </section>
+        
+        <section>
+            <article>
+                <p><small>⏰ El codi expirarà en <strong>15 minuts</strong>.</small></p>
+                <p><small>📫 Si no has rebut el correu, revisa la carpeta de spam o correu no desitjat.</small></p>
+            </article>
+        </section>
+    </main>
+</body>
+
+</html>

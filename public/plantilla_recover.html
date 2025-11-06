@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Recuperar contrasenya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <form method="POST" action="/">
+                <header>
+                    <h2>Recuperar contrasenya</h2>
+                </header>
+                
+                <article>
+                    <p>Has oblidat la teva contrasenya? No et preocupis!</p>
+                    <p>Introdueix el teu correu electrònic i t'enviarem un enllaç per restablir la contrasenya de forma segura.</p>
+                </article>
+                
+                <label for="user_email">Correu electrònic</label>
+                <input id="user_email" type="email" name="user_email" required placeholder="exemple@correu.com" />
+                
+                <input type="submit" name="recover" value="Enviar enllaç de recuperació" />
+            </form>
+        </section>
+        
+        <section>
+            <div>
+                <a href="/?page=login" class="button">Torna a l'inici de sessió</a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

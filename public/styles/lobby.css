@@ -1,0 +1,187 @@
+/* lobby.css - Estilos unificados para el lobby Snake */
+
+body {
+  background: #2c3e50;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #34495e;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  padding: 32px 24px 24px 24px;
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-size: 2rem;
+  color: #3498db;
+}
+
+/* Configuración del jugador */
+.player-setup {
+  margin-bottom: 32px;
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
+  color: #ecf0f1;
+}
+
+input[type="text"] {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid #95a5a6;
+  background: #2c3e50;
+  color: #ecf0f1;
+  width: 70%;
+  font-size: 1rem;
+  margin-right: 8px;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+input[type="color"] {
+  width: 50px;
+  height: 40px;
+  border: 2px solid #95a5a6;
+  border-radius: 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+input[type="color"]:hover {
+  border-color: #3498db;
+}
+
+/* Botones */
+button {
+  margin: 8px 6px 0 0;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #3498db;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Lista de partidas */
+.games-list {
+  margin-top: 24px;
+}
+
+.games-list h2 {
+  font-size: 1.3rem;
+  color: #3498db;
+  margin-bottom: 16px;
+}
+
+ul#gamesUl {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.game-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2c3e50;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.color-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  margin-right: 12px;
+  border: 2px solid #ecf0f1;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.game-item span {
+  color: #ecf0f1;
+}
+
+.waiting-time {
+  color: #95a5a6;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.loading {
+  color: #3498db;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+/* Mensaje cuando no hay partidas */
+ul#gamesUl li {
+  color: #95a5a6;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    max-width: 95vw;
+    padding: 24px 16px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  button {
+    font-size: 0.9rem;
+    padding: 8px 14px;
+  }
+  
+  input[type="text"] {
+    width: 65%;
+  }
+  
+  .game-item {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

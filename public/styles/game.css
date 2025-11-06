@@ -1,0 +1,329 @@
+/* game.css - Estilos unificados para el juego Snake */
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #2c3e50;
+  color: #ecf0f1;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.container {
+  max-width: 900px;
+  background: #34495e;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  padding: 24px;
+  position: relative;
+}
+
+h1 {
+  text-align: center;
+  margin: 0 0 16px 0;
+  font-size: 2rem;
+  color: #3498db;
+}
+
+/* Info del juego */
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #2c3e50;
+  border-radius: 8px;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 2px solid #ecf0f1;
+}
+
+.vs {
+  font-weight: bold;
+  color: #e74c3c;
+  font-size: 1.2rem;
+}
+
+/* Latencia */
+.latency-container {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+.latency-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.latency-value {
+  font-weight: bold;
+  color: #95a5a6;
+}
+
+.latency-value.good { color: #2ecc71; }
+.latency-value.fair { color: #f39c12; }
+.latency-value.poor { color: #e74c3c; }
+
+.latency-advantage {
+  font-size: 0.8rem;
+  color: #3498db;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.latency-advantage.warning {
+  color: #f39c12;
+}
+
+/* Estado de conexión */
+.connection-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(44, 62, 80, 0.9);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #ecf0f1;
+}
+
+.connection-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2ecc71;
+  animation: pulse 2s infinite;
+}
+
+.connection-indicator.reconnecting {
+  background: #f39c12;
+  animation: blink 0.5s infinite;
+}
+
+.connection-indicator.disconnected {
+  background: #e74c3c;
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.last-update {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.latency {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #95a5a6;
+}
+
+.latency.good { color: #2ecc71; }
+.latency.fair { color: #f39c12; }
+.latency.poor { color: #e74c3c; }
+
+/* Pista de controles */
+.controls-hint {
+  text-align: center;
+  margin: 12px 0;
+  padding: 8px;
+  background: #2c3e50;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #bdc3c7;
+}
+
+.controls-hint strong {
+  color: #3498db;
+}
+
+/* Canvas */
+#canvas {
+  display: block;
+  margin: 0 auto;
+  background: #ecf0f1;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+/* Pantalla de Game Over */
+.game-over {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.game-over.show {
+  display: flex;
+}
+
+.game-over-content {
+  background: #34495e;
+  padding: 32px;
+  border-radius: 16px;
+  text-align: center;
+  max-width: 400px;
+}
+
+.game-over-content h2 {
+  color: #3498db;
+  margin-top: 0;
+}
+
+.winner {
+  font-size: 1.5rem;
+  color: #2ecc71;
+  margin: 16px 0;
+}
+
+.loser {
+  font-size: 1.5rem;
+  color: #e74c3c;
+  margin: 16px 0;
+}
+
+.final-scores {
+  margin: 16px 0;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.game-stats-header {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #3498db;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.player-stats {
+  background: #2c3e50;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 8px 0;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #34495e;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.player-name {
+  font-weight: bold;
+  color: #ecf0f1;
+}
+
+.player-score {
+  color: #3498db;
+  font-weight: bold;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2ecc71;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.stat-highlight {
+  color: #f39c12;
+  font-weight: bold;
+}
+
+/* Botones */
+button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+button:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+}
+
+/* Esperando jugador */
+.waiting {
+  text-align: center;
+  padding: 32px;
+  font-size: 1.2rem;
+  color: #f39c12;
+}
+
+/* Animación de feedback */
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    max-width: 95vw;
+    padding: 16px;
+  }
+  
+  #canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .controls-hint {
+    font-size: 0.8rem;
+  }
+}

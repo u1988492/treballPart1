@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Nova contrasenya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <form method="POST" action="/">
+                <header>
+                    <h2>Estableix nova contrasenya</h2>
+                </header>
+                
+                <article>
+                    <p>Ara pots establir una nova contrasenya per al teu compte.</p>
+                    <p>Assegura't que sigui segura i fàcil de recordar per a tu.</p>
+                </article>
+                
+                <input type="hidden" name="token" value="{RESET_TOKEN}" />
+                
+                <label for="new_password">Nova contrasenya (mín. 10 caràcters)</label>
+                <input id="new_password" type="password" name="new_password" minlength="10" required placeholder="Crea una contrasenya segura" />
+                
+                <label for="confirm_password">Confirma la contrasenya</label>
+                <input id="confirm_password" type="password" name="confirm_password" minlength="10" required placeholder="Repeteix la mateixa contrasenya" />
+                
+                <input type="submit" name="reset_password" value="Canviar contrasenya" />
+            </form>
+        </section>
+        
+        <section>
+            <div>
+                <a href="/?page=login" class="button">Torna a l'inici de sessió</a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

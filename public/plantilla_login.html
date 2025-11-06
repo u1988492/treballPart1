@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Inici de sessió</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <form method="{METHOD}" action="{LOGIN_LOGOUT_URL}">
+                <header>
+                    <h2>Inici de sessió</h2>
+                </header>
+                
+                <label for="login_username">Nom d'usuari</label>
+                <input id="login_username" type="text" name="user_name" value="{LOGIN_USERNAME}" required placeholder="Introdueix el teu nom d'usuari" />
+                
+                <label for="login_password">Contrasenya</label>
+                <input id="login_password" type="password" name="user_password" required placeholder="Introdueix la teva contrasenya" />
+                
+                <input type="submit" name="login" value="Iniciar sessió" />
+            </form>
+        </section>
+        
+        <section>
+            <div>
+                <a href="/?page=recover">He oblidat la meva contrasenya</a>
+            </div>
+        </section>
+        
+        <section>
+            <div>
+                <a href="{REGISTER_URL}" class="button">Registra un nou compte</a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

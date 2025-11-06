@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mossegam</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/game.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🐍 Mossega'm</h1>
+    
+    <!-- Estado de conexión -->
+    <div class="connection-status" id="connectionStatus">
+      <div class="connection-indicator" id="connectionIndicator"></div>
+      <span id="connectionText">Conectado</span>
+    </div>
+    
+    <div id="waitingScreen" class="waiting" style="display: none;">
+      <p>⏳ Esperando al otro jugador...</p>
+    </div>
+    
+    <div id="gameScreen" style="display: none;">
+      <div class="game-info">
+        <div class="player-info">
+          <div class="color-box" id="p1Color"></div>
+          <span id="p1Name">Jugador 1</span>: <strong id="p1Score">0</strong> pts
+        </div>
+        <span class="vs">VS</span>
+        <div class="player-info">
+          <div class="color-box" id="p2Color"></div>
+          <span id="p2Name">Jugador 2</span>: <strong id="p2Score">0</strong> pts
+        </div>
+      </div>
+      
+      <!-- Latencias de ambos jugadores -->
+      <div class="latency-container">
+        <div class="latency-item">
+          <span>Tu ping:</span>
+          <span class="latency-value" id="yourLatency">--ms</span>
+        </div>
+        <div class="latency-item">
+          <span>Oponente:</span>
+          <span class="latency-value" id="opponentLatency">--ms</span>
+        </div>
+      </div>
+      
+      <div class="latency-advantage" id="latencyAdvantage"></div>
+      <div class="last-update" id="lastUpdate">Última actualización: --</div>
+      
+      <div class="controls-hint">
+        <strong>Controles:</strong> Jugador 1: WASD | Jugador 2: Flechas ⬆️⬇️⬅️➡️
+      </div>
+      
+      <canvas id="canvas" width="800" height="800"></canvas>
+    </div>
+  </div>
+  
+  <div class="game-over" id="gameOver">
+    <div class="game-over-content">
+      <h2>¡Partida Terminada!</h2>
+      <div id="gameOverMessage"></div>
+      <div class="final-scores" id="finalScores"></div>
+      <button onclick="window.location.href='lobby.html'">Volver al Lobby</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

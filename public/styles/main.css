@@ -1,0 +1,348 @@
+/* main.css - Estilos unificados para toda la aplicación Snake */
+
+/* Variables CSS */
+:root {
+  --primary-bg: #2c3e50;
+  --secondary-bg: #34495e;
+  --accent-color: #3498db;
+  --success-color: #2ecc71;
+  --warning-color: #f39c12;
+  --danger-color: #e74c3c;
+  --text-primary: #ecf0f1;
+  --text-secondary: #95a5a6;
+  --text-muted: #bdc3c7;
+  --border-color: #95a5a6;
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --radius: 8px;
+  --radius-large: 16px;
+}
+
+/* Reset y base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  margin: 0;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Contenedor principal */
+main {
+  max-width: 500px;
+  margin: 40px auto;
+  background: var(--secondary-bg);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow);
+  padding: 32px 24px 24px 24px;
+  position: relative;
+}
+
+/* Encabezados */
+h1 {
+  text-align: center;
+  margin: 0 0 24px 0;
+  font-size: 2rem;
+  color: var(--accent-color);
+}
+
+h1 a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+h1 a:hover {
+  color: var(--success-color);
+}
+
+h2 {
+  color: var(--accent-color);
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+}
+
+h3 {
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+/* Formularios */
+form {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin: 16px 0 6px 0;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--primary-bg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Botones */
+input[type="submit"],
+button,
+.button {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  margin: 8px 6px 0 0;
+  min-width: 120px;
+}
+
+input[type="submit"]:hover,
+button:hover,
+.button:hover {
+  background: #2980b9;
+  transform: translateY(-1px);
+}
+
+input[type="submit"]:active,
+button:active,
+.button:active {
+  transform: translateY(0);
+}
+
+input[type="submit"]:disabled,
+button:disabled,
+.button:disabled {
+  background: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Botón de éxito */
+.button-success {
+  background: var(--success-color);
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  border-radius: var(--radius);
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.button-success:hover {
+  background: #27ae60;
+  transform: translateY(-1px);
+}
+
+/* Enlaces */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--success-color);
+}
+
+/* Secciones */
+section {
+  margin-bottom: 24px;
+  padding: 20px 0;
+}
+
+section:last-child {
+  margin-bottom: 0;
+}
+
+section > div {
+  text-align: center;
+}
+
+/* Artículos */
+article {
+  background: var(--primary-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-top: 16px;
+}
+
+article p {
+  margin-bottom: 8px;
+}
+
+article p:last-child {
+  margin-bottom: 0;
+}
+
+/* Mensajes de feedback */
+.feedback,
+mark {
+  display: block;
+  padding: 12px 16px;
+  margin: 16px 0;
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 500;
+}
+
+mark {
+  background: var(--danger-color);
+  color: white;
+}
+
+.feedback.success {
+  background: var(--success-color);
+  color: white;
+}
+
+.feedback.warning {
+  background: var(--warning-color);
+  color: white;
+}
+
+.feedback.info {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* Estados de verificación */
+.status-verified {
+  color: var(--success-color);
+  font-weight: 500;
+}
+
+.status-pending {
+  color: var(--warning-color);
+  font-weight: 500;
+}
+
+/* Código de verificación */
+.verification-code {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.verification-code input {
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+  text-align: center;
+  letter-spacing: 3px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  main {
+    max-width: 95vw;
+    margin: 20px auto;
+    padding: 24px 16px;
+  }
+  
+  h1 {
+    font-size: 1.6rem;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+  }
+  
+  input[type="submit"],
+  button,
+  .button {
+    width: 100%;
+    margin: 8px 0;
+  }
+  
+  .button-success {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Animaciones */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Estados de conexión y latencia (para páginas del juego) */
+.connection-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(44, 62, 80, 0.9);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.connection-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--success-color);
+  animation: pulse 2s infinite;
+}
+
+.connection-indicator.reconnecting {
+  background: var(--warning-color);
+  animation: blink 0.5s infinite;
+}
+
+.connection-indicator.disconnected {
+  background: var(--danger-color);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
