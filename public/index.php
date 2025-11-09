@@ -10,10 +10,32 @@
 require_once 'config.php';
 require_once 'functions.php';
 
+// Configuración segura de errores para producción
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../private/php_errors.log');
+
+// Solo mostrar errores en desarrollo
+if (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) {
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+}
+
 // iniciar sesión con configuración segura
 ini_set('session.cookie_httponly', 1);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_lifetime', COOKIE_LIFETIME);
+
+// Para entornos HTTPS (descomenta en producción)
+// ini_set('session.cookie_secure', 1);
+
+// Protección CSRF - SameSite
+ini_set('session.cookie_samesite', 'Strict');
+
+// Configuración adicional de seguridad
+ini_set('session.use_only_cookies', 1);
+ini_set('session.hash_function', 'sha256');
+
 session_start();
 
 // regenerar ID de sesión periódicamente para seguridad
@@ -27,6 +49,10 @@ if (!isset($_SESSION['last_regeneration'])) {
 // defaults
 $template = 'home';
 $db_connection = DB_CONNECTION;
+
+// Generar token CSRF para formularios
+$csrf_token = generate_csrf_token();
+
 $configuration = array(
     '{FEEDBACK}'          => '',
     '{LOGIN_LOGOUT_TEXT}' => 'Login',
@@ -38,7 +64,8 @@ $configuration = array(
     '{REGISTER_USERNAME}' => '',
     '{REGISTER_EMAIL}'    => '',
     '{USER_NAME}'         => '',
-    '{USER_EMAIL}'        => ''
+    '{USER_EMAIL}'        => '',
+    '{CSRF_TOKEN}'        => $csrf_token
 );
 
 // comprobar si hay una sesión activa
@@ -66,10 +93,10 @@ if (isset($_GET['page']) && $_GET['page'] === 'get_user_info') {
     if (isset($_SESSION['user_id']) && isset($_SESSION['user_name'])) {
         echo json_encode([
             'authenticated' => true,
-            'user_id' => $_SESSION['user_id'],
-            'user_name' => $_SESSION['user_name'],
-            'user_email' => $_SESSION['user_email'] ?? ''
-        ]);
+            'user_id' => (int)$_SESSION['user_id'], // Sanitizar como entero
+            'user_name' => clean_input($_SESSION['user_name']),
+            'user_email' => clean_input($_SESSION['user_email'] ?? '')
+        ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
     } else {
         echo json_encode(['authenticated' => false]);
     }
@@ -129,8 +156,15 @@ if (isset($_GET['page'])) {
 
 // formularios (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db = new PDO($db_connection);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Validación CSRF para todos los formularios
+    $csrf_token_input = $_POST['csrf_token'] ?? '';
+    if (!validate_csrf_token($csrf_token_input)) {
+        error_log("[SEGURIDAD] Token CSRF inválido o expirado - IP: " . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        $configuration['{FEEDBACK}'] = '<mark>ERROR: Token de seguridad inválido. Si us plau, torna-ho a intentar.</mark>';
+        // No procesar ninguna acción si el CSRF es inválido
+    } else {
+        $db = new PDO($db_connection);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // registro de usuario
     if (isset($_POST['register'])) {
@@ -149,15 +183,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log("[REGISTRO] Email no válido: email='$user_email'");
         }
         if(!validate_password_length($user_password)) {
-            $errors[] = 'La contrasenya ha de tenir almenys ' . PASSWORD_MIN_LENGTH . ' caràcters';
+            $errors[] = 'La contrasenya ha de tenir almenys ' . PASSWORD_MIN_LENGTH . ' caràcters per raons de seguretat';
             error_log("[REGISTRO] Contraseña demasiado corta: usuario='$user_name'");
         }
 
         if (empty($errors)) {
             $pwned_check = check_pwned_password($user_password);
             if ($pwned_check['pwned']) {
-                $errors[] = 'Aquesta contrasenya ha estat compromesa en ' . number_format($pwned_check['count']) . ' filtracions de dades. Si us plau, utilitza una altra';
-                error_log("[REGISTRO] Contraseña comprometida: usuario='$user_name', filtraciones=" . $pwned_check['count']);
+                $errors[] = 'SEGURETAT: Aquesta contrasenya ha estat compromesa en ' . number_format($pwned_check['count']) . ' filtracions de dades i NO es pot utilitzar. Si us plau, escull una contrasenya completament diferent.';
+                error_log("[REGISTRO] Contraseña comprometida BLOQUEADA: usuario='$user_name', filtraciones=" . $pwned_check['count']);
+            } elseif ($pwned_check['error']) {
+                // Si la API falla, registrar pero permitir - para revisión manual posterior
+                error_log("[REGISTRO] ADVERTENCIA: No se pudo verificar contraseña contra breaches para usuario='$user_name' - API no disponible");
             }
         }
         
@@ -228,33 +265,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        $sql = 'SELECT totp_secret FROM users WHERE user_id = :user_id';
-        $query = $db->prepare($sql);
-        $query->bindValue(':user_id', $_SESSION['pending_2fa_user_id']);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-
-        if($result && $code === $result['totp_secret']){
-            $sql = 'UPDATE users SET email_verified = 1 WHERE user_id = :user_id';
+        // Verificar rate limiting para 2FA
+        $rate_limit = check_2fa_rate_limit($db, $_SESSION['pending_2fa_user_id']);
+        if ($rate_limit['locked']) {
+            $minutes = ceil($rate_limit['time_left'] / 60);
+            $configuration['{FEEDBACK}'] = '<mark>ERROR: Massa intents de verificació fallits. Torna-ho a provar en ' . $minutes . ' minuts</mark>';
+            error_log("[2FA] Usuario bloqueado por demasiados intentos 2FA: user_id=" . $_SESSION['pending_2fa_user_id']);
+            $template = 'verify_2fa';
+        } else {
+            $sql = 'SELECT totp_secret FROM users WHERE user_id = :user_id';
             $query = $db->prepare($sql);
             $query->bindValue(':user_id', $_SESSION['pending_2fa_user_id']);
             $query->execute();
+            $result = $query->fetch(PDO::FETCH_ASSOC);
 
-            $_SESSION['user_id'] = $_SESSION['pending_2fa_user_id'];
-            $_SESSION['user_name'] = $_SESSION['pending_2fa_user_name'];
-            $_SESSION['user_email'] = $_SESSION['pending_2fa_user_email'];
+            if($result && $code === $result['totp_secret']){
+                $sql = 'UPDATE users SET email_verified = 1 WHERE user_id = :user_id';
+                $query = $db->prepare($sql);
+                $query->bindValue(':user_id', $_SESSION['pending_2fa_user_id']);
+                $query->execute();
 
-            unset($_SESSION['pending_2fa_user_id']);
-            unset($_SESSION['pending_2fa_user_name']);
-            unset($_SESSION['pending_2fa_user_email']);
-            unset($_SESSION['pending_2fa_expires']);
+                $_SESSION['user_id'] = $_SESSION['pending_2fa_user_id'];
+                $_SESSION['user_name'] = $_SESSION['pending_2fa_user_name'];
+                $_SESSION['user_email'] = $_SESSION['pending_2fa_user_email'];
 
-            header('Location: /');
-            exit();
-        }
-        else{
-            $configuration['{FEEDBACK}'] = '<mark>ERROR: Codi incorrecte</mark>';
-            $template = 'verify_2fa';
+                unset($_SESSION['pending_2fa_user_id']);
+                unset($_SESSION['pending_2fa_user_name']);
+                unset($_SESSION['pending_2fa_user_email']);
+                unset($_SESSION['pending_2fa_expires']);
+
+                header('Location: /');
+                exit();
+            }
+            else{
+                record_failed_2fa_attempt($db, $_SESSION['pending_2fa_user_id']);
+                $configuration['{FEEDBACK}'] = '<mark>ERROR: Codi incorrecte</mark>';
+                $template = 'verify_2fa';
+                prevent_timing_attack(200, 400);
+            }
         }
     }
     
@@ -307,6 +355,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     error_log("[LOGIN] Credenciales incorrectas: usuario='$user_name'");
                     $configuration['{LOGIN_USERNAME}'] = clean_input($user_name);
                     $template = 'login';
+                    // Delay para prevenir timing attacks
+                    prevent_timing_attack(200, 500);
                 }
             }
         }
@@ -315,6 +365,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // recuperación de contraseña
     else if(isset($_POST['recover'])){
         $user_email = $_POST['user_email'] ?? '';
+
+        // Delay inicial para normalizar timing
+        prevent_timing_attack(300, 600);
 
         $configuration['{REGISTER_EMAIL}'] = 'Si el teu email està registrat, rebràs un enllaç de recuperació';
         $template = 'recover';
@@ -370,14 +423,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             error_log("[RECUPERACIÓN] Contraseñas no coinciden: token='$token'");
         }
         if(!validate_password_length($new_password)){
-            $errors[] = 'La contrasenya ha de tenir almenys ' . PASSWORD_MIN_LENGTH . ' caràcters';
+            $errors[] = 'La contrasenya ha de tenir almenys ' . PASSWORD_MIN_LENGTH . ' caràcters per raons de seguretat';
             error_log("[RECUPERACIÓN] Contraseña demasiado corta: token='$token'");
         }
         if(empty($errors)){
             $pwned_check = check_pwned_password($new_password);
             if ($pwned_check['pwned']) {
-                $errors[] = 'Aquesta contrasenya ha estat compromesa en ' . number_format($pwned_check['count']) . ' filtracions de dades. Si us plau, utilitza una altra';
-                error_log("[RECUPERACIÓN] Contraseña comprometida: token='$token', filtraciones=" . $pwned_check['count']);
+                $errors[] = 'SEGURETAT: Aquesta contrasenya ha estat compromesa en ' . number_format($pwned_check['count']) . ' filtracions de dades i NO es pot utilitzar. Si us plau, escull una contrasenya completament diferent.';
+                error_log("[RECUPERACIÓN] Contraseña comprometida BLOQUEADA: token='$token', filtraciones=" . $pwned_check['count']);
+            } elseif ($pwned_check['error']) {
+                error_log("[RECUPERACIÓN] ADVERTENCIA: No se pudo verificar contraseña contra breaches para token='$token' - API no disponible");
             }
         }
         
@@ -414,6 +469,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $template = 'reset';
         }
     }
+    } // Fin validación CSRF
 }
 
 // renderizar plantilla

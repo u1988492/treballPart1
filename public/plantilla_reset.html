@@ -19,6 +19,8 @@
         
         <section>
             <form method="POST" action="/">
+                <input type="hidden" name="csrf_token" value="{CSRF_TOKEN}" />
+                
                 <header>
                     <h2>Estableix nova contrasenya</h2>
                 </header>
@@ -30,11 +32,11 @@
                 
                 <input type="hidden" name="token" value="{RESET_TOKEN}" />
                 
-                <label for="new_password">Nova contrasenya (mín. 10 caràcters)</label>
-                <input id="new_password" type="password" name="new_password" minlength="10" required placeholder="Crea una contrasenya segura" />
+                <label for="new_password">Nova contrasenya (mín. 12 caràcters)</label>
+                <input id="new_password" type="password" name="new_password" minlength="12" required placeholder="Crea una contrasenya segura" />
                 
                 <label for="confirm_password">Confirma la contrasenya</label>
-                <input id="confirm_password" type="password" name="confirm_password" minlength="10" required placeholder="Repeteix la mateixa contrasenya" />
+                <input id="confirm_password" type="password" name="confirm_password" minlength="12" required placeholder="Repeteix la mateixa contrasenya" />
                 
                 <input type="submit" name="reset_password" value="Canviar contrasenya" />
             </form>

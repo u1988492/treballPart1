@@ -467,7 +467,15 @@ try {
 
     throw new Exception('Invalid action');
 
+} catch (PDOException $e) {
+    // Error de base de datos - no revelar detalles
+    error_log("[SNAKE_GAME] Error de base de datos: " . $e->getMessage() . " - Usuario: " . $authenticated_user_id);
+    http_response_code(500);
+    echo json_encode(['error' => 'Error intern del servidor']);
+    exit;
 } catch (Exception $e) {
+    // Errores de lógica del juego
+    error_log("[SNAKE_GAME] Error de juego: " . $e->getMessage() . " - Usuario: " . $authenticated_user_id);
     http_response_code(400);
     echo json_encode(['error' => $e->getMessage()]);
     exit;
