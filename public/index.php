@@ -8,7 +8,7 @@
 */
 
 require_once 'config.php';
-require_once 'functions.php';
+require_once './api/functions.php';
 
 // Configuración segura de errores para producción
 ini_set('display_errors', 0);
@@ -473,6 +473,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // renderizar plantilla
-$html = file_get_contents('plantilla_' . $template . '.html', true);
+$html = file_get_contents('./pages/templates/plantilla_' . $template . '.html', true);
 $html = str_replace(array_keys($configuration), array_values($configuration), $html);
 echo $html;
