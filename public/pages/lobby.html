@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mossegam Lobby</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <meta name="description" content="Lobby multijugador para el juego Snake.">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/lobby.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🐍 Mossega'm</h1>
+    
+    <!-- Información del usuario autenticado -->
+    <div class="user-info" id="userInfo" style="text-align: right; margin-bottom: 1rem; padding: 0.5rem;">
+      <span id="userName">Cargando...</span> | 
+      <a href="/?page=logout" style="color: #e74c3c;">Cerrar sesión</a>
+    </div>
+    
+    <section class="player-setup">
+      <form id="playerForm">
+        <label>
+          Color:
+          <input type="color" id="playerColor" title="Elige un color vivo para mejor visibilidad">
+          <span class="tooltip-hint" title="El color de tu serpiente. Se recomienda usar colores brillantes.">💡</span>
+        </label>
+        <button type="submit" id="createBtn">Crear Nueva Partida</button>
+        <button type="button" id="refreshBtn" title="Refrescar la lista de partidas disponibles">🔄 Actualizar</button>
+        <a href="../api/preferences.php" class="button-link" title="Configurar preferencias de juego">⚙️ Preferencias</a>
+      </form>
+    </section>
+    
+    <section class="games-list" id="gamesSection">
+      <h2>
+        Partidas Disponibles
+        <span class="tooltip-hint" title="Se muestran las partidas con mejor calidad de conexión para ti">💡</span>
+      </h2>
+      <div id="loadingGames" class="loading" style="display:none;">Cargando partidas...</div>
+      <ul id="gamesUl"></ul>
+      <div id="noGamesMessage" style="display:none; text-align:center; color:#95a5a6; padding:20px;">
+        <p>No hay partidas disponibles en este momento.</p>
+        <p><small>¡Crea una nueva partida para empezar a jugar!</small></p>
+      </div>
+    </section>
+  </div>
+  
+  <script src="../js/lobby.js"></script>
+  <script>
+    // Cargar información del usuario autenticado
+    fetch('/?page=get_user_info')
+      .then(response => response.json())
+      .then(data => {
+        if (data.authenticated) {
+          document.getElementById('userName').textContent = data.user_name;
+        } else {
+          window.location.href = '/?page=login';
+        }
+      })
+      .catch(error => {
+        console.error('Error loading user info:', error);
+        window.location.href = '/?page=login';
+      });
+  </script>
+</body>
+</html>

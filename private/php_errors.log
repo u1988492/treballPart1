@@ -1,0 +1,14 @@
+[09-Nov-2025 16:08:04 UTC] [SEGURIDAD] Token CSRF inválido o expirado - IP: ::1
+[09-Nov-2025 16:08:37 UTC] [SEGURIDAD] ALERTA: API HaveIBeenPwned no disponible después de 3 intentos para verificación de contraseña
+[09-Nov-2025 16:08:37 UTC] [REGISTRO] ADVERTENCIA: No se pudo verificar contraseña contra breaches para usuario='testuser' - API no disponible
+[09-Nov-2025 16:08:52 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[HY000]: General error: 1 no such column: failed_2fa_attempts in C:\Users\claud\Desktop\CLAUDIA_HODOROGA\cosas_de_la_uni\CUARTO_GDDV\MULTIJUGADOR\treballPart1\public\functions.php:196
+Stack trace:
+#0 C:\Users\claud\Desktop\CLAUDIA_HODOROGA\cosas_de_la_uni\CUARTO_GDDV\MULTIJUGADOR\treballPart1\public\functions.php(196): PDO->prepare('SELECT failed_2...')
+#1 C:\Users\claud\Desktop\CLAUDIA_HODOROGA\cosas_de_la_uni\CUARTO_GDDV\MULTIJUGADOR\treballPart1\public\index.php(269): check_2fa_rate_limit(Object(PDO), '4')
+#2 {main}
+  thrown in C:\Users\claud\Desktop\CLAUDIA_HODOROGA\cosas_de_la_uni\CUARTO_GDDV\MULTIJUGADOR\treballPart1\public\functions.php on line 196
+[09-Nov-2025 16:10:42 UTC] [SEGURIDAD] ALERTA: API HaveIBeenPwned no disponible después de 3 intentos para verificación de contraseña
+[09-Nov-2025 16:10:42 UTC] [REGISTRO] ADVERTENCIA: No se pudo verificar contraseña contra breaches para usuario='testuser' - API no disponible
+[09-Nov-2025 16:10:42 UTC] [REGISTRO] Usuario ya existe: usuario='testuser'
+[09-Nov-2025 16:51:41 UTC] [SEGURIDAD] ALERTA: API HaveIBeenPwned no disponible después de 3 intentos para verificación de contraseña
+[09-Nov-2025 16:51:41 UTC] [REGISTRO] ADVERTENCIA: No se pudo verificar contraseña contra breaches para usuario='testjoin' - API no disponible

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Perfil d'usuari</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <header>
+                <h2>Benvingut/da, {USER_NAME}!</h2>
+            </header>
+            <article>
+                <h3>Informació del perfil</h3>
+                <p><strong>Nom d'usuari:</strong> {USER_NAME}</p>
+                <p><strong>Correu electrònic:</strong> {USER_EMAIL}</p>
+                <p><strong>Estat:</strong> <span class="status-verified">✓ Verificat</span></p>
+                <div style="margin-top: 15px;">
+                    <a href="api/preferences.php" class="button">⚙️ Preferències de joc</a>
+                </div>
+            </article>
+        </section>
+        
+        <section>
+            <header>
+                <h3>🐍 Joc Multijugador Snake</h3>
+            </header>
+            <article>
+                <p>Juga al nostre joc multijugador de Snake!</p>
+                <p>Competeix amb altres jugadors en temps real i demostra les teves habilitats!</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="pages/lobby.html" class="button-success">
+                        Entrar al Lobby
+                    </a>
+                </div>
+            </article>
+        </section>
+        
+        <section>
+            <div>
+                <a href="{LOGIN_LOGOUT_URL}" class="button">{LOGIN_LOGOUT_TEXT}</a>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8">
+    <title>{SITE_NAME} :: Preferències de joc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Claudia Hodoroga y Federico Diaz">
+    <link rel="icon" href="/favicon.png">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/profile_settings.css">
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1><a href="/">🐍 {SITE_NAME}</a></h1>
+            {FEEDBACK}
+        </header>
+        
+        <section>
+            <header>
+                <h2>⚙️ Preferències de joc</h2>
+            </header>
+            <article>
+                <form method="POST" action="../api/preferences.php" id="preferences-form">
+                    <input type="hidden" name="csrf_token" value="{CSRF_TOKEN}">
+                    
+                    <div class="form-group">
+                        <label for="display_name">
+                            Nom a mostrar en el joc
+                            <span class="tooltip">ℹ️
+                                <span class="tooltiptext">Aquest nom es mostrarà en lloc del teu nom d'usuari durant les partides</span>
+                            </span>
+                        </label>
+                        <input type="text" 
+                               id="display_name" 
+                               name="display_name" 
+                               value="{DISPLAY_NAME}" 
+                               maxlength="63" 
+                               required
+                               placeholder="El teu nom de jugador">
+                        <small>Màxim 63 caràcters</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="preferred_color">
+                            Color de la serp
+                            <span class="tooltip">ℹ️
+                                <span class="tooltiptext">Tria un color viu per a una millor visibilitat durant el joc</span>
+                            </span>
+                        </label>
+                        <input type="color" 
+                               id="preferred_color" 
+                               name="preferred_color" 
+                               value="{PREFERRED_COLOR}">
+                        <span>Color seleccionat:</span>
+                        <span class="color-preview" id="color-preview" style="background-color: {PREFERRED_COLOR};"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            Controls preferits
+                            <span class="tooltip">ℹ️
+                                <span class="tooltiptext">Aquests controls s'utilitzaran en totes les teves partides</span>
+                            </span>
+                        </label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" 
+                                       id="controls_wasd" 
+                                       name="preferred_controls" 
+                                       value="wasd" 
+                                       {WASD_CHECKED}>
+                                <label for="controls_wasd">WASD (W=Amunt, A=Esquerra, S=Avall, D=Dreta)</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" 
+                                       id="controls_arrows" 
+                                       name="preferred_controls" 
+                                       value="arrows" 
+                                       {ARROWS_CHECKED}>
+                                <label for="controls_arrows">FLETXES (↑↓←→)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="button-success">💾 Guardar preferències</button>
+                        <a href="../index.php?page=profile" class="button">← Tornar al perfil</a>
+                    </div>
+                </form>
+            </article>
+        </section>
+    </main>
+    
+    <script>
+        // Actualitzar preview del color en temps real
+        const colorInput = document.getElementById('preferred_color');
+        const colorPreview = document.getElementById('color-preview');
+        
+        colorInput.addEventListener('input', function() {
+            colorPreview.style.backgroundColor = this.value;
+        });
+        
+        // Validació del formulari
+        document.getElementById('preferences-form').addEventListener('submit', function(e) {
+            const displayName = document.getElementById('display_name').value.trim();
+            
+            if (displayName.length === 0) {
+                e.preventDefault();
+                alert('El nom a mostrar no pot estar buit');
+                return false;
+            }
+            
+            if (displayName.length > 63) {
+                e.preventDefault();
+                alert('El nom a mostrar no pot tenir més de 63 caràcters');
+                return false;
+            }
+        });
+    </script>
+</body>
+
+</html>

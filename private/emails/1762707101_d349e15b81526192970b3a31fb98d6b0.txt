@@ -1,0 +1,13 @@
+To: testjon@mail.com
+Subject: Verificació del teu compte a Mossegam
+Headers: MIME-Version: 1.0
+Content-type: text/html; charset=UTF-8
+From: Mossegam <default@mail.com>
+
+
+
+                    <h2>Benvingut/da a Mossegam</h2>
+                    <p>El teu codi de verificació és: <strong style='font-size: 24px;'>650030</strong></p>
+                    <p>Aquest codi expirarà en 15 minuts.</p>
+                    <p>Si no has sol·licitat aquest registre, ignora aquest missatge.</p>
+                
