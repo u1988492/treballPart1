@@ -10,6 +10,3 @@ private/emails/*.txt
 publish-profile.xml
 node_modules/
 vendor/
-azure-deploy.ps1
-azure-deploy.sh
-azure-commands-reference.ps1
