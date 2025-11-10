@@ -1,0 +1,58 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: pdo, sqlite3
+
+      - name: Install dependencies (if composer.json has dependencies)
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-dev --optimize-autoloader
+          fi
+
+      - name: Create necessary directories and files
+        run: |
+          mkdir -p private/emails
+          touch private/.gitkeep
+          touch private/emails/.gitkeep
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "REPLACE_WITH_YOUR_APP_NAME"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
+
+      - name: Post-deployment instructions
+        run: |
+          echo "========================================="
+          echo "Deployment completed successfully!"
+          echo "========================================="
+          echo ""
+          echo "IMPORTANT: On first deployment, you MUST initialize databases:"
+          echo "1. Go to Azure Portal -> Your Web App -> Advanced Tools -> Go"
+          echo "2. Open Debug console (CMD or PowerShell)"
+          echo "3. Navigate to: D:\home\site\wwwroot"
+          echo "4. Run: php init_azure_db.php"
+          echo ""
+          echo "Or use Azure CLI:"
+          echo "az webapp ssh --name YOUR_APP_NAME --resource-group rg-snake-game"
+          echo "cd /home/site/wwwroot && php init_azure_db.php"
+          echo ""
+          echo "========================================="

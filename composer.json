@@ -1,0 +1,13 @@
+{
+  "name": "mossegam/snake-game",
+  "description": "Multiplayer Snake Game - Academic Project",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "authors": [
+    {
+      "name": "Claudia Hodoroga"
+    }
+  ]
+}
