@@ -8,10 +8,9 @@ define('DEVELOPMENT_MODE', !IS_AZURE && (getenv('DEV_MODE') === 'true'));
 
 // Configuración de bases de datos
 if (IS_AZURE) {
-    // En Azure, usar directorio persistente /home/data
-    $home = getenv('HOME') ?: '/home';
-    define('DB_CONNECTION', 'sqlite:' . $home . '/data/users.db');
-    define('DB_GAMES_CONNECTION', 'sqlite:' . $home . '/data/games.db');
+    // En Azure, usar directorio dentro de wwwroot (más compatible con permisos)
+    define('DB_CONNECTION', 'sqlite:' . __DIR__ . '/../private/users.db');
+    define('DB_GAMES_CONNECTION', 'sqlite:' . __DIR__ . '/../private/games.db');
 } else {
     // Desarrollo local
     define('DB_CONNECTION', 'sqlite:' . __DIR__ . '/../private/users.db');

@@ -112,7 +112,8 @@ function send_email($to, $subject, $body) {
     }
     
     // En modo desarrollo o sin API key configurada, guardar en archivo
-    if (DEVELOPMENT_MODE || empty(BREVO_API_KEY)) {
+    $brevo_api_key = getenv('BREVO_API_KEY') ?: getenv('SMTP_PASSWORD');
+    if (DEVELOPMENT_MODE || empty($brevo_api_key)) {
         return send_email_to_file($to, $subject, $body);
     }
     
@@ -142,6 +143,14 @@ function send_email($to, $subject, $body) {
 
 // Enviar email usando Brevo API
 function send_email_brevo($to, $subject, $body) {
+    // Obtener API key desde variables de entorno
+    $api_key = getenv('BREVO_API_KEY') ?: getenv('SMTP_PASSWORD');
+    $api_url = 'https://api.brevo.com/v3/smtp/email';
+    
+    if (empty($api_key)) {
+        return ['success' => false, 'error' => 'BREVO_API_KEY no configurada'];
+    }
+    
     $data = [
         'sender' => [
             'name' => SMTP_FROM_NAME,
@@ -154,13 +163,13 @@ function send_email_brevo($to, $subject, $body) {
         'htmlContent' => $body
     ];
     
-    $ch = curl_init(BREVO_API_URL);
+    $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         'accept: application/json',
-        'api-key: ' . BREVO_API_KEY,
+        'api-key: ' . $api_key,
         'content-type: application/json'
     ]);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);

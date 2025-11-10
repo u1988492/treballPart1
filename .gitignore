@@ -16,8 +16,15 @@ private/emails/*.txt
 publish-profile.xml
 *.PublishSettings
 
-# Archivos temporales
+# Archivos temporales y deployment
 snake-game.zip
+*.zip
+deploy-package/
+deploy-temp/
+azure-logs/
+temp_*.php
+*.bak
+publish-profile-*.xml
 
 # IDE
 .vscode/
