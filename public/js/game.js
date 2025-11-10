@@ -449,6 +449,12 @@ function adjustColorsIfNeeded() {
       opponentAdjustedColor = generateDistinctColor(myColor);
       colorAdjustmentMade = true;
       
+      // Actualizar el cuadrado de color en la UI
+      const opponentColorBox = isPlayer1 ? document.getElementById('p2Color') : document.getElementById('p1Color');
+      if (opponentColorBox) {
+        opponentColorBox.style.background = opponentAdjustedColor;
+      }
+      
       // Mostrar indicador sutil
       showColorAdjustmentIndicator();
     } else {

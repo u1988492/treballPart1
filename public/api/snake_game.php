@@ -101,7 +101,7 @@ function random_direction() {
 }
 
 // Genera frutas en posiciones válidas
-function random_fruits($exclude = [], $n = 3) {
+function random_fruits($exclude = [], $n = 6) {
     $types = ['apple','banana','cherry'];
     $fruits = [];
     $attempts = 0;

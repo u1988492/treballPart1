@@ -1,0 +1,13 @@
+/* preferences.css - Estilos adicionales para tooltips en preferencias */
+
+.tooltip-hint {
+  cursor: help;
+  margin-left: 8px;
+  font-size: 1.1em;
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.tooltip-hint:hover {
+  transform: scale(1.2);
+}

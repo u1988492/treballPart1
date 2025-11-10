@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-  max-width: 500px;
+  max-width: 650px;
   margin: 40px auto;
   background: #34495e;
   border-radius: 16px;
@@ -108,6 +108,9 @@ ul#gamesUl {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .game-item {

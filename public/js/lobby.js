@@ -94,6 +94,7 @@ document.getElementById('playerForm').addEventListener('submit', async function(
 // Variable para trackear si tenías una partida propia
 let hadOwnGame = false;
 let lastOwnGameId = null;
+let gameCancelledByUser = false; // Nueva variable para evitar redirección después de cancelar
 
 // Botón actualizar lista
 document.getElementById('refreshBtn').addEventListener('click', () => loadGames(true));
@@ -127,12 +128,17 @@ async function loadGames(showMessage = false) {
     // Verificar si tenías una partida propia que ya no está (alguien se unió)
     const hasOwnGame = games.some(g => g.is_own_game);
     
-    if (hadOwnGame && !hasOwnGame && lastOwnGameId) {
+    if (hadOwnGame && !hasOwnGame && lastOwnGameId && !gameCancelledByUser) {
       // Tu partida desapareció de la lista = alguien se unió
       // Redirigir automáticamente al juego
       console.log('Alguien se unió a tu partida, redirigiendo...');
       window.location.href = `game.html?game_id=${lastOwnGameId}`;
       return;
+    }
+    
+    // Resetear flag de cancelación
+    if (gameCancelledByUser && !hasOwnGame) {
+      gameCancelledByUser = false;
     }
     
     // Actualizar estado
@@ -440,6 +446,9 @@ async function cancelGame(gameId) {
   if (!confirm('¿Estás seguro de que quieres cancelar esta partida?')) {
     return;
   }
+  
+  // Marcar que el usuario canceló la partida manualmente
+  gameCancelledByUser = true;
   
   setLoading(true);
   
