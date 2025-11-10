@@ -1,12 +1,28 @@
 .exe
 PHP/*
+
+# Private databases and logs
 private/*.db
 private/*.log
-private/*.txt
 private/emails/*.txt
 !private/.gitkeep
 !private/emails/.gitkeep
+
+# Environment files
 .env
+.env.local
+
+# Azure publish profiles (contienen credenciales)
 publish-profile.xml
-node_modules/
-vendor/
+*.PublishSettings
+
+# Archivos temporales
+snake-game.zip
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

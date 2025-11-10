@@ -1,0 +1,77 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          extensions: pdo, sqlite3, mbstring, json
+
+      - name: Validate composer.json
+        run: |
+          if [ -f composer.json ]; then
+            echo "✓ composer.json found"
+            cat composer.json
+          fi
+
+      - name: Install Composer dependencies
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-dev --optimize-autoloader --no-interaction
+            echo "✓ Dependencies installed"
+          else
+            echo "⚠ No composer.json found, skipping dependencies"
+          fi
+
+      - name: Create necessary directories
+        run: |
+          mkdir -p private/emails
+          touch private/.gitkeep
+          touch private/emails/.gitkeep
+          echo "✓ Directories created"
+
+      - name: Verify project structure
+        run: |
+          echo "=== Project Structure ==="
+          ls -la
+          echo ""
+          echo "=== Public Directory ==="
+          ls -la public/
+          echo ""
+          echo "=== Private Directory ==="
+          ls -la private/
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "snake-game-snakegame20251110123137"
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .
+
+      - name: Post-deployment notice
+        run: |
+          echo "=========================================="
+          echo "✓ Deployment completed successfully!"
+          echo "=========================================="
+          echo ""
+          echo "⚠ IMPORTANTE - Primera vez solamente:"
+          echo "1. Ir a Azure Portal → Tu Web App → Advanced Tools → Go"
+          echo "2. Abrir Debug console → CMD"
+          echo "3. Navegar a: D:\home\site\wwwroot"
+          echo "4. Ejecutar: php init_azure_db.php"
+          echo ""
+          echo "Esto inicializará las bases de datos SQLite en Azure."
+          echo "=========================================="
